@@ -10,14 +10,34 @@ function getMovieCharacters (movieId) {
       return;
     }
 
+    if (res.statusCode !== 200) {
+      console.error(`Failed to fetch movie details: ${res.statusCode} ${res.statusMessage}`);
+      return;
+    }
+
     const characterUrls = body.characters;
-    characterUrls.forEach(url => {
+    let charactersFetched = 0;
+    const characters = new Array(characterUrls.length);
+
+    characterUrls.forEach((url, index) => {
       request(url, { json: true }, (err, res, body) => {
         if (err) {
           console.error(`Failed to fetch character details: ${err.message}`);
           return;
         }
-        console.log(body.name);
+
+        if (res.statusCode !== 200) {
+          console.error(`Failed to fetch character details: ${res.statusCode} ${res.statusMessage}`);
+          return;
+        }
+
+        characters[index] = body.name;
+        charactersFetched++;
+
+        // Only print characters when all have been fetched
+        if (charactersFetched === characterUrls.length) {
+          characters.forEach(character => console.log(character));
+        }
       });
     });
   });
