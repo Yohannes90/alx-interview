@@ -1,6 +1,7 @@
 #!/usr/bin/python3
+""" Module that contain makeChange
+"""
 import sys
-
 
 def makeChange(coins, total):
     """
